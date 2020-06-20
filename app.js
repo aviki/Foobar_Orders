@@ -3,6 +3,7 @@ window.addEventListener("DOMContentLoaded", init);
 const theme = document.querySelector("#checkbox");
 
 var beerArray = [];
+var beerColorArray = [];
 
 function init() {
   let themeCheck = localStorage.getItem("theme-color"); // checking what the selected theme is in the local storage
@@ -11,6 +12,13 @@ function init() {
     enableLightMode();
   }
   theme.addEventListener("change", changeTheme);
+
+  fetch("https://gist.githubusercontent.com/aviki/8efed66982b6b0cf6d91297aa3b54877/raw/32f57455ff9093cb902ad87c436293480624540b/beer-categories.json") //fetching beer categories
+    .then((res) => res.json())
+    .then(function (res) {
+      beerColorArray = res;
+      console.log(beerColorArray);
+    });
 
   fetch("https://foobar-squad.herokuapp.com") //fetching all the bar info
     .then((res) => res.json())
@@ -495,3 +503,47 @@ document.querySelector("form").addEventListener("submit", function (e) {
   };
   stripe.createToken(card, extraDetails).then(setOutcome);
 });
+
+// ---------------- <FILTER> ------------------------
+
+const allButton = document.querySelector(".all");
+const lightButton = document.querySelector(".light-filter");
+const darkButton = document.querySelector(".dark-filter");
+
+function filterAll() {
+  darkButton.classList.remove("filter-active");
+  lightButton.classList.remove("filter-active");
+  allButton.classList.add("filter-active");
+  document.querySelectorAll(".beer").forEach((x) => (x.style.display = "grid"));
+}
+allButton.addEventListener("click", filterAll);
+
+function filterLight() {
+  darkButton.classList.remove("filter-active");
+  allButton.classList.remove("filter-active");
+  lightButton.classList.add("filter-active");
+  document.querySelectorAll(".beer").forEach((x) => (x.style.display = "grid"));
+  document.querySelectorAll(".beer").forEach((x) => {
+    var beerCategory = beerArray.find((e) => e.name == x.querySelector(".beer-name").textContent).category;
+    if (beerColorArray.find((i) => i.category == beerCategory).color != "light") {
+      x.style.display = "none";
+    }
+  });
+}
+lightButton.addEventListener("click", filterLight);
+
+function filterDark() {
+  allButton.classList.remove("filter-active");
+  lightButton.classList.remove("filter-active");
+  darkButton.classList.add("filter-active");
+  document.querySelectorAll(".beer").forEach((x) => (x.style.display = "grid"));
+  document.querySelectorAll(".beer").forEach((x) => {
+    var beerCategory = beerArray.find((e) => e.name == x.querySelector(".beer-name").textContent).category;
+    if (beerColorArray.find((i) => i.category == beerCategory).color != "dark") {
+      x.style.display = "none";
+    }
+  });
+}
+darkButton.addEventListener("click", filterDark);
+
+// ---------------- </FILTER> -----------------------
