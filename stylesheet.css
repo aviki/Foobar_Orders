@@ -287,6 +287,30 @@ button {
   border-bottom: 2px solid var(--orange);
 }
 
+.filters {
+  padding-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+
+.filters button {
+  width: 25%;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border-radius: 25px;
+  border: solid 3px var(--button-border);
+  background-color: var(--button-color);
+  color: var(--text-color);
+}
+.filters .filter-active {
+  background-color: var(--button-border);
+  color: var(--selected);
+  font-weight: bold;
+}
+
 .emptyCart {
   font-weight: bold;
   text-align: center;
